@@ -1,0 +1,437 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pwt7.grd",
+				"pwt7.grgdpch.l1"
+			],
+			[
+				"pwt7.grg",
+				"pwt7.grgdpch.l1"
+			],
+			[
+				"eff",
+				"effects"
+			],
+			[
+				"marginal",
+				"marginalModelPlots"
+			],
+			[
+				"infle",
+				"influencePlot"
+			],
+			[
+				"outlier",
+				"outlierTest"
+			],
+			[
+				"fit7",
+				"fit7mod3"
+			],
+			[
+				"pwt7.gr",
+				"pwt7.grgdpch.l1"
+			],
+			[
+				"comp",
+				"compareCoefs"
+			],
+			[
+				"gr",
+				"grgdpch.l1"
+			],
+			[
+				"pwt7",
+				"pwt7.grgdpch.l1"
+			],
+			[
+				".",
+				".175"
+			],
+			[
+				"n",
+				"n"
+			],
+			[
+				"X",
+				"X"
+			],
+			[
+				"spell",
+				"spellln3"
+			],
+			[
+				"cum",
+				"cum.Fail.l1"
+			],
+			[
+				"cum.",
+				"cum.Fail.l1"
+			],
+			[
+				"dd",
+				"dd"
+			],
+			[
+				"gwf.geddes.",
+				"gwf.geddes.dum"
+			],
+			[
+				"gwf.geddes",
+				"gwf.geddes.collapsed"
+			],
+			[
+				"geddes",
+				"gwf.geddes.collapsed"
+			],
+			[
+				"Some",
+				"Somewhat"
+			],
+			[
+				"ife",
+				"ifelse"
+			],
+			[
+				"ciri.speech",
+				"ciri.speech.num"
+			],
+			[
+				"if",
+				"ifelse"
+			],
+			[
+				"TRUE",
+				"TRUE"
+			],
+			[
+				"gwf.",
+				"gwf.geddes.collapsed"
+			],
+			[
+				"gwf.re",
+				"gwf.reg.collapsed"
+			],
+			[
+				"gwf.regime",
+				"gwf.regimetype.num"
+			],
+			[
+				"gwf.reg",
+				"gwf.regimetype.num"
+			],
+			[
+				"c",
+				"c"
+			],
+			[
+				"NA",
+				"NA"
+			],
+			[
+				"wr.type",
+				"wr.type.l-1"
+			],
+			[
+				"y",
+				"y"
+			],
+			[
+				"post",
+				"postscriptFonts"
+			],
+			[
+				"athe",
+				"athletics.R"
+			],
+			[
+				"athlet",
+				"athletics.R"
+			],
+			[
+				"a",
+				"athletics"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 256.0,
+		"last_filter": "repl",
+		"selected_items":
+		[
+			[
+				"repl",
+				"SublimeREPL: R"
+			],
+			[
+				"repl r",
+				"SublimeREPL: R"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"i",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 453.0
+	},
+	"console":
+	{
+		"height": 798.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/dag/Dropbox/data/dd/script/r/heidelberg/original/ModelDev.R",
+		"/Users/dag/Dropbox/data/dd/script/r/heidelberg/revision/master.R",
+		"/Users/dag/Dropbox/data/dd/script/r/heidelberg/revision/GWFmerge.R",
+		"/Users/dag/Dropbox/data/dd/script/r/heidelberg/revision/PWTmerge.R",
+		"/Users/dag/Dropbox/data/dd/script/r/heidelberg/revision/VarDef.R",
+		"/Users/dag/Dropbox/data/dd/script/r/heidelberg/revision/testing-ground (MinimiUbuntu's conflicted copy 2013-01-11).R",
+		"/home/dag/Dropbox/Buero/Dembar/ArcTan.R",
+		"/home/dag/Dropbox/Buero/Dissertation/bewerbung/curriculum_vitae.tex",
+		"/home/dag/Dropbox/Buero/WZB/GLES Katalog/2012-10-2_Handbook.tex",
+		"/home/dag/.gvfs/wzb on selene/group/ZKD/DSL/iwarchiv/MAKRO/INTERNAT/PartiesAndGovts/PartyGovtDataBase/Routinen/SPSS/Taage Annualisierung.sps",
+		"/home/dag/Dropbox/data/dd/script/r/heidelberg/master.R",
+		"/home/dag/Dropbox/data/dd/script/r/heidelberg/VarDef.R",
+		"/home/dag/Dropbox/data/dd/script/r/heidelberg/repression.R",
+		"/home/dag/Dropbox/data/dd/script/r/heidelberg/ModelDev.R",
+		"/home/dag/Dropbox/data/dd/script/r/heidelberg/economy.R",
+		"/home/dag/.config/sublime-text-2/Packages/User/R.sublime-settings",
+		"/home/dag/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
+		"/home/dag/Dropbox/Bibliothek/snippets/SublimeREPLconfig.txt",
+		"/home/dag/.config/sublime-text-2/Packages/User/Plain text.sublime-settings",
+		"/home/dag/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+		"/home/dag/.config/sublime-text-2/Packages/User/Preferences.sublime-settings",
+		"/home/dag/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap",
+		"/home/dag/Dropbox/data/dd/script/r/heidelberg/GWFmerge.R",
+		"/home/dag/Dropbox/data/dd/script/r/heidelberg/PWTmerge.R",
+		"/home/dag/.gvfs/wzb on selene/group/ZKD/DSL/iwarchiv/Tausch/Autokratie/Daten/sec/Penn World Tables 7.1/pwt71_07262012version/cowcode2_pwt.do",
+		"/home/dag/Dropbox/data/dd/script/do/expl_repr.do",
+		"/home/dag/Dropbox/data/dd/script/r/guttman/guttman_unrest.R",
+		"/home/dag/Dropbox/StabilityAR/Publikationen/2012/heidelberg/Abstract.tex",
+		"/home/dag/Dropbox/StabilityAR/SpecSup/BehaveLeg/untitled.tex",
+		"/home/dag/Dropbox/StabilityAR/SpecSup/BehaveLeg/CausalScheme/CausalScheme.tex",
+		"/home/dag/Dropbox/StabilityAR/SpecSup/BehaveLeg/threshold.R",
+		"/home/dag/Desktop/latexdraw.tex",
+		"/home/dag/cm-fonts/cm-unicode-0.7.0/INSTALL",
+		"/home/dag/Dropbox/StabilityAR/SpecSup/BehaveLeg/CausalScheme.tex",
+		"/home/dag/Dropbox/Stabilität AR/SpecSup/BehaveLeg/untitled.tex",
+		"/home/dag/Dropbox/Stabilität AR/SpecSup/BehaveLeg/untitled-1.tex",
+		"/home/dag/SampleStats/CFA.R",
+		"/home/dag/SampleStats/CFA1.txt",
+		"/home/dag/Dropbox/data/dd/script/r/beta/dd_beta.r",
+		"/home/dag/.config/sublime-text-2/Packages/User/JSON.sublime-settings",
+		"/home/dag/.config/sublime-text-2/Packages/User/SublimeREPL.sublime-settings",
+		"/home/dag/.config/sublime-text-2/Packages/Package Control/Package Control.sublime-settings"
+	],
+	"find":
+	{
+		"height": 22.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"fit",
+			"error",
+			"coldwar",
+			"error",
+			"grepl",
+			"centering",
+			"na.action",
+			"wrap",
+			"wid",
+			"length",
+			" ",
+			"masked",
+			"error",
+			"Error",
+			"error",
+			"test <-",
+			"View",
+			"rename",
+			"recode",
+			"par",
+			"puert",
+			"chin",
+			"342",
+			"374",
+			"255\n\n255",
+			"←",
+			"Desktop",
+			"unrest",
+			"help\nhelp",
+			"help_type",
+			"hel",
+			"1",
+			"ellic",
+			"legitimacy believe",
+			"Computer",
+			"cmu",
+			"computer",
+			"Computer",
+			"cmu",
+			"rulers",
+			"mouse",
+			"Hand-eye",
+			"Strength",
+			"Endurance",
+			"athl"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"<-",
+			"legitimacy belief",
+			"HANDEYE",
+			"STRENGTH",
+			"ENDURANCE"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 21.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 154.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "hardTimes.sublime-project",
+	"replace":
+	{
+		"height": 40.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 458.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 259.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
