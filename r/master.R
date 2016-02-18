@@ -48,18 +48,40 @@ dd <- read.dta(
   convert.dates = TRUE
 )
 detach(package:foreign)
-# ## --- Prepare and merge GWF Regime codings ----------------
+
+## --- Prepare and merge GWF Regime codings ----------------
 source(
   file.path(pathCode, "buildData", "GWFmerge.R"), echo = TRUE
 )
+
 ## --- Prepare and merge Penn World Table ------------------
 source(
   file.path(pathCode, "buildData", "PWTmerge.R"), echo = TRUE
 )
+
 ## --- Define Variables ------------------------------------
 source(
   file.path(pathCode, "buildData", "VarDef.R"), echo = TRUE
 )
 save.image(file = file.path(pathOut, 'base.RData'))
+
 ## --- Model development -----------------------------------
-# source("./script/r/heidelberg/ModelDev.R", verbose = TRUE)
+source(
+  file.path(pathCode, 'buildModel', '01_defineEconomicShockVariables.R'),
+  echo = TRUE
+)
+# source(
+#   file.path(pathCode, 'buildModel', '02_ModelExploration.R'),
+#   echo = TRUE
+# )
+## Documentation gap: A series of models uses a variable 
+## that frankly doesn't exist. Since these models have the 
+## same structure as those presented in the paper I assume
+## that I simply changed the variable name at some point.
+
+## --- Model deployment ------------------------------------
+source(
+  file.path(pathCode, 'buildModel', '03_ModelDeployment.R'),
+  echo = TRUE
+)
+## END

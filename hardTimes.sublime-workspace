@@ -159,6 +159,88 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 438,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "r/master.R",
+			"settings":
+			{
+				"buffer_size": 2462,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "r/testing-ground.R",
+			"settings":
+			{
+				"buffer_size": 13670,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "r/buildModel/01_defineAdditionalVariables.R",
+			"settings":
+			{
+				"buffer_size": 10032,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/dag/Dropbox/data/dd/script/r/heidelberg/original/economy.R",
+			"settings":
+			{
+				"buffer_size": 14842,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "r/exploration/repression.R",
+			"settings":
+			{
+				"buffer_size": 6918,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "r/buildData/VarDef.R",
+			"settings":
+			{
+				"buffer_size": 16746,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "r/buildData/GWFmerge.R",
+			"settings":
+			{
+				"buffer_size": 8250,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "r/buildData/PWTmerge.R",
+			"settings":
+			{
+				"buffer_size": 7837,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "\nR version 3.2.3 (2015-12-10) -- \"Wooden Christmas-Tree\"\nCopyright (C) 2015 The R Foundation for Statistical Computing\nPlatform: x86_64-apple-darwin13.4.0 (64-bit)\n\nR is free software and comes with ABSOLUTELY NO WARRANTY.\nYou are welcome to redistribute it under certain conditions.\nType 'license()' or 'licence()' for distribution details.\n\n  Natural language support but running in an English locale\n\nR is a collaborative project with many contributors.\nType 'contributors()' for more information and\n'citation()' on how to cite R or R packages in publications.\n\nType 'demo()' for some demos, 'help()' for on-line help, or\n'help.start()' for an HTML browser interface to help.\nType 'q()' to quit R.\n\n> ## === Heidelberg Performanz Papier ========================\n> ## === Master script =======================================\n> ## === (c) DT, 08.2012 =====================================\n> ## =========================================================\n> rm(list=ls())                             ## Clear Workspace\n> if(Sys.info()['user'] == 'dag') {\n+   options(help_type = 'html')\n+   pathData <- \"/Users/dag/Dropbox/data/dd/data\"\n+   pathCode <- \"/Users/dag/github/hardTimes/r\"\n+   pathOut <- \"/Users/dag/Dropbox/data/dd/out/heidelberg\"\n+ }\n> ## =========================================================\n> ## --- Global functions ------------------------------------\n> # paneldata.lags(A, \"person\", \"year\", c(\"v1\",\"v2\"), lags=1:4)\n> # Given data A with key variables \"person\" and \"year\" create \n> # take variables v1 and create lagged versions 1:4 \n> # Source: \n> # Ajay Narottam Shah (14 Aug 2005): [R] Panel data handling\n> # (lags, growth rates), \n> # http://tolstoy.newcastle.edu.au/R/help/05/08/10380.html,\n> # last access: 08-21-2012\n> paneldata.lags <- function(X, unitvar, timevar, lagvars, \n+   lags=1) {   \n+   stopifnot(length(lagvars)>=1) \n+   X <- X[order(X[,timevar]),]     # in case it's not sorted.\n+   innertask <- function(Y, lagvars, lags) {\n+     E <- labels <- NULL \n+     for (v in lagvars) {\n+       for (i in lags) {\n+         E <- cbind(E, Lag(Y[,v], i))\n+       }\n+     labels <- c(labels, paste(v, \".l\", lags, sep=\"\"))\n+     } \n+     colnames(E) <- labels \n+     cbind(Y, E) \n+   }\n+ do.call(\"rbind\", by(X, X[,unitvar], innertask, lagvars, \n+   lags)) \n+ }\n> # REQUIRES package::Hmisc\n> ## =========================================================\n> \n> ## -- Load data --------------------------------------------\n> library(foreign)\n> dd <- read.dta(\n+   file.path(pathData, \"base\", \"ddv1_qog_cnts_archigos.dta\"),\n+   convert.underscore = TRUE, convert.factor = TRUE,\n+   convert.dates = TRUE\n+ )\n> detach(package:foreign)\n> # ## --- Prepare and merge GWF Regime codings ----------------\n> source(\n+   file.path(pathCode, \"buildData\", \"GWFmerge.R\"), echo = TRUE\n+ )\n\n> ## Heidelberg: merge GWF with DD\n> ## =========================================================\n> library(foreign)\n\n> gwf <- read.dta(\n+   file.path(pathData, 'base', 'GWF2012.dta'),\n+   convert.underscore = TRUE,\n+   convert.dates      = TRUE,\n+   convert.factors   .... [TRUNCATED] \n\n> detach(package:foreign)\n\n> # --- Generate cowcode2.1 ----------------------------------\n> gwf <- within(gwf, {                  # double-check codings\n+   cowcode2.1 <- NA\n+   .... [TRUNCATED] \n\n> dev.new()\n\n> plot(\n+   gwf$cowcode2, gwf$cowcode2.1, \n+   type=\"l\", \n+   main=\"Double-Check Country Codes\")\n\n> cor(gwf[,c(\"cowcode2\", \"cowcode2.1\")], use=\"complete.obs\")\n           cowcode2 cowcode2.1\ncowcode2          1          1\ncowcode2.1        1          1\n\n> sapply(gwf[, c(\"cowcode2\", \"cowcode2.1\")], summary)\n        cowcode2 cowcode2.1\nMin.         2.0        2.0\n1st Qu.    235.0      235.0\nMedian     451.0      451.0\nMean       451.6      451.6\n3rd Qu.    660.0      660.0\nMax.       920.0      920.0\n\n> table(gwf$gwf.country[is.na(gwf$cowcode2.1) == TRUE]) \n< table of extent 0 >\n\n> # NA ctry's?\n> \n> # --- Convert Geddes dummies to factor ---------------------\n> gwf <- within(gwf, {\n+   gwf.geddes.collapsed <- NA\n+   gwf.geddes. .... [TRUNCATED] \n\n> summary(gwf$gwf.geddes.collapsed)\n   PARTY MILITARY MONARCHY PERSONAL     NA's \n    2262      579      595     1151     3366 \n\n> # ----------------------------------------------------------\n> library(ETLUtils)\nLoading required package: ff\nLoading required package: bit\nAttaching package bit\npackage:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)\ncreators: bit bitwhich\ncoercion: as.logical as.integer as.bit as.bitwhich which\noperator: ! & | xor != ==\nquerying: print length any all min max range sum summary\nbit access: length<- [ [<- [[ [[<-\nfor more help type ?bit\n\nAttaching package: ‘bit’\n\nThe following object is masked from ‘package:base’:\n\n    xor\n\nAttaching package ff\n- getOption(\"fftempdir\")==\"/var/folders/gl/nvslsqg90693mz0f6_bpcz6r0000gn/T//RtmpuOPO96\"\n\n- getOption(\"ffextension\")==\"ff\"\n\n- getOption(\"ffdrop\")==TRUE\n\n- getOption(\"fffinonexit\")==TRUE\n\n- getOption(\"ffpagesize\")==65536\n\n- getOption(\"ffcaching\")==\"mmnoflush\"  -- consider \"ffeachflush\" if your system stalls on large writes\n\n- getOption(\"ffbatchbytes\")==16777216 -- consider a different value for tuning your system\n\n- getOption(\"ffmaxbytes\")==536870912 -- consider a different value for tuning your system\n\n\nAttaching package: ‘ff’\n\nThe following objects are masked from ‘package:bit’:\n\n    clone, clone.default, clone.list\n\nThe following objects are masked from ‘package:utils’:\n\n    write.csv, write.csv2\n\nThe following objects are masked from ‘package:base’:\n\n    is.factor, is.ordered\n\n\n> dd <- matchmerge(\n+   x     = dd,\n+   y     = gwf,\n+   by.x  = c(\"cowcode2\", \"year\"),\n+   by.y  = c(\"cowcode2\", \"year\"),\n+   all.x = TRUE,\n+   add.c .... [TRUNCATED] \n2016-02-18 07:41:45: Creating key variables\n2016-02-18 07:41:45: Searching for key matches\n2016-02-18 07:41:45: Joining the data frames\n\n> # --- Tidy workspace ---------------------------------------\n> detach(package:ETLUtils)\n\n> detach(package:ff)\nDetaching package ff\n\n> detach(package:bit)\n\n> rm(gwf)\n\n> ## END\n> ## --- Prepare and merge Penn World Table ------------------\n> source(\n+   file.path(pathCode, \"buildData\", \"PWTmerge.R\"), echo = TRUE\n+ )\n\n> ## Heidelberg: Merge DD with Penn World Tables\n> ## ---------------------------------------------------------\n> pwt <- read.csv(\n+   file.path(pathD .... [TRUNCATED] \n\n> pwt <- within(pwt, {\n+   cowcode2 <- NA\n+   cowcode2[isocode==\"AFG\"] <- 700\n+   cowcode2[isocode==\"ALB\"] <- 339\n+   cowcode2[isocode==\"DZA\"] <- 615\n .... [TRUNCATED] \n\n> pwt[which(duplicated(pwt[, c(\"cowcode2\", \"year\")])), \n+   c(\"cowcode2\", \"isocode\", \"year\")]\n     cowcode2 isocode year\n2136       NA     CHN 1950\n2137       NA     CHN 1951\n2138       NA     CHN 1952\n2139       NA     CHN 1953\n2140       NA     CHN 1954\n2141       NA     CHN 1955\n2142       NA     CHN 1956\n2143       NA     CHN 1957\n2144       NA     CHN 1958\n2145       NA     CHN 1959\n2146       NA     CHN 1960\n2147       NA     CHN 1961\n2148       NA     CHN 1962\n2149       NA     CHN 1963\n2150       NA     CHN 1964\n2151       NA     CHN 1965\n2152       NA     CHN 1966\n2153       NA     CHN 1967\n2154       NA     CHN 1968\n2155       NA     CHN 1969\n2156       NA     CHN 1970\n2157       NA     CHN 1971\n2158       NA     CHN 1972\n2159       NA     CHN 1973\n2160       NA     CHN 1974\n2161       NA     CHN 1975\n2162       NA     CHN 1976\n2163       NA     CHN 1977\n2164       NA     CHN 1978\n2165       NA     CHN 1979\n2166       NA     CHN 1980\n2167       NA     CHN 1981\n2168       NA     CHN 1982\n2169       NA     CHN 1983\n2170       NA     CHN 1984\n2171       NA     CHN 1985\n2172       NA     CHN 1986\n2173       NA     CHN 1987\n2174       NA     CHN 1988\n2175       NA     CHN 1989\n2176       NA     CHN 1990\n2177       NA     CHN 1991\n2178       NA     CHN 1992\n2179       NA     CHN 1993\n2180       NA     CHN 1994\n2181       NA     CHN 1995\n2182       NA     CHN 1996\n2183       NA     CHN 1997\n2184       NA     CHN 1998\n2185       NA     CHN 1999\n2186       NA     CHN 2000\n2187       NA     CHN 2001\n2188       NA     CHN 2002\n2189       NA     CHN 2003\n2190       NA     CHN 2004\n2191       NA     CHN 2005\n2192       NA     CHN 2006\n2193       NA     CHN 2007\n2194       NA     CHN 2008\n2195       NA     CHN 2009\n2196       NA     CHN 2010\n4515       NA     HKG 1950\n4516       NA     HKG 1951\n4517       NA     HKG 1952\n4518       NA     HKG 1953\n4519       NA     HKG 1954\n4520       NA     HKG 1955\n4521       NA     HKG 1956\n4522       NA     HKG 1957\n4523       NA     HKG 1958\n4524       NA     HKG 1959\n4525       NA     HKG 1960\n4526       NA     HKG 1961\n4527       NA     HKG 1962\n4528       NA     HKG 1963\n4529       NA     HKG 1964\n4530       NA     HKG 1965\n4531       NA     HKG 1966\n4532       NA     HKG 1967\n4533       NA     HKG 1968\n4534       NA     HKG 1969\n4535       NA     HKG 1970\n4536       NA     HKG 1971\n4537       NA     HKG 1972\n4538       NA     HKG 1973\n4539       NA     HKG 1974\n4540       NA     HKG 1975\n4541       NA     HKG 1976\n4542       NA     HKG 1977\n4543       NA     HKG 1978\n4544       NA     HKG 1979\n4545       NA     HKG 1980\n4546       NA     HKG 1981\n4547       NA     HKG 1982\n4548       NA     HKG 1983\n4549       NA     HKG 1984\n4550       NA     HKG 1985\n4551       NA     HKG 1986\n4552       NA     HKG 1987\n4553       NA     HKG 1988\n4554       NA     HKG 1989\n4555       NA     HKG 1990\n4556       NA     HKG 1991\n4557       NA     HKG 1992\n4558       NA     HKG 1993\n4559       NA     HKG 1994\n4560       NA     HKG 1995\n4561       NA     HKG 1996\n4562       NA     HKG 1997\n4563       NA     HKG 1998\n4564       NA     HKG 1999\n4565       NA     HKG 2000\n4566       NA     HKG 2001\n4567       NA     HKG 2002\n4568       NA     HKG 2003\n4569       NA     HKG 2004\n4570       NA     HKG 2005\n4571       NA     HKG 2006\n4572       NA     HKG 2007\n4573       NA     HKG 2008\n4574       NA     HKG 2009\n4575       NA     HKG 2010\n6162       NA     MAC 1950\n6163       NA     MAC 1951\n6164       NA     MAC 1952\n6165       NA     MAC 1953\n6166       NA     MAC 1954\n6167       NA     MAC 1955\n6168       NA     MAC 1956\n6169       NA     MAC 1957\n6170       NA     MAC 1958\n6171       NA     MAC 1959\n6172       NA     MAC 1960\n6173       NA     MAC 1961\n6174       NA     MAC 1962\n6175       NA     MAC 1963\n6176       NA     MAC 1964\n6177       NA     MAC 1965\n6178       NA     MAC 1966\n6179       NA     MAC 1967\n6180       NA     MAC 1968\n6181       NA     MAC 1969\n6182       NA     MAC 1970\n6183       NA     MAC 1971\n6184       NA     MAC 1972\n6185       NA     MAC 1973\n6186       NA     MAC 1974\n6187       NA     MAC 1975\n6188       NA     MAC 1976\n6189       NA     MAC 1977\n6190       NA     MAC 1978\n6191       NA     MAC 1979\n6192       NA     MAC 1980\n6193       NA     MAC 1981\n6194       NA     MAC 1982\n6195       NA     MAC 1983\n6196       NA     MAC 1984\n6197       NA     MAC 1985\n6198       NA     MAC 1986\n6199       NA     MAC 1987\n6200       NA     MAC 1988\n6201       NA     MAC 1989\n6202       NA     MAC 1990\n6203       NA     MAC 1991\n6204       NA     MAC 1992\n6205       NA     MAC 1993\n6206       NA     MAC 1994\n6207       NA     MAC 1995\n6208       NA     MAC 1996\n6209       NA     MAC 1997\n6210       NA     MAC 1998\n6211       NA     MAC 1999\n6212       NA     MAC 2000\n6213       NA     MAC 2001\n6214       NA     MAC 2002\n6215       NA     MAC 2003\n6216       NA     MAC 2004\n6217       NA     MAC 2005\n6218       NA     MAC 2006\n6219       NA     MAC 2007\n6220       NA     MAC 2008\n6221       NA     MAC 2009\n6222       NA     MAC 2010\n8358       NA     PRI 1950\n8359       NA     PRI 1951\n8360       NA     PRI 1952\n8361       NA     PRI 1953\n8362       NA     PRI 1954\n8363       NA     PRI 1955\n8364       NA     PRI 1956\n8365       NA     PRI 1957\n8366       NA     PRI 1958\n8367       NA     PRI 1959\n8368       NA     PRI 1960\n8369       NA     PRI 1961\n8370       NA     PRI 1962\n8371       NA     PRI 1963\n8372       NA     PRI 1964\n8373       NA     PRI 1965\n8374       NA     PRI 1966\n8375       NA     PRI 1967\n8376       NA     PRI 1968\n8377       NA     PRI 1969\n8378       NA     PRI 1970\n8379       NA     PRI 1971\n8380       NA     PRI 1972\n8381       NA     PRI 1973\n8382       NA     PRI 1974\n8383       NA     PRI 1975\n8384       NA     PRI 1976\n8385       NA     PRI 1977\n8386       NA     PRI 1978\n8387       NA     PRI 1979\n8388       NA     PRI 1980\n8389       NA     PRI 1981\n8390       NA     PRI 1982\n8391       NA     PRI 1983\n8392       NA     PRI 1984\n8393       NA     PRI 1985\n8394       NA     PRI 1986\n8395       NA     PRI 1987\n8396       NA     PRI 1988\n8397       NA     PRI 1989\n8398       NA     PRI 1990\n8399       NA     PRI 1991\n8400       NA     PRI 1992\n8401       NA     PRI 1993\n8402       NA     PRI 1994\n8403       NA     PRI 1995\n8404       NA     PRI 1996\n8405       NA     PRI 1997\n8406       NA     PRI 1998\n8407       NA     PRI 1999\n8408       NA     PRI 2000\n8409       NA     PRI 2001\n8410       NA     PRI 2002\n8411       NA     PRI 2003\n8412       NA     PRI 2004\n8413       NA     PRI 2005\n8414       NA     PRI 2006\n8415       NA     PRI 2007\n8416       NA     PRI 2008\n8417       NA     PRI 2009\n8418       NA     PRI 2010\n\n> # Missing cowcode2 for: China1, Hong Kong, Macao, \n> # Puerto Rico --> not in DD, therefore exclude\n> pwt <- pwt[is.na(pwt$cowcode2)==FALSE, ]\n\n> # merge data -----------------------------------------------\n> \n> library(Hmisc)\nLoading required package: lattice\nLoading required package: survival\nLoading required package: Formula\nLoading required package: ggplot2\n\nAttaching package: ‘Hmisc’\n\nThe following objects are masked from ‘package:base’:\n\n    format.pval, round.POSIXt, trunc.POSIXt, units\n\n\n> pwt <- upData(pwt, \n+   rename=list(rgdpch = \"pwt7.rgdpch\", \n+     grgdpch = \"pwt7.grgdpch\", POP = \"pwt7.pop\",\n+     kg = \"pwt7.kg\", rgdpl = \"pwt7.r ...\" ... [TRUNCATED] \nInput object size:	 3332368 bytes;	 38 variables	 11285 observations\nRenamed variable	 rgdpch 	to pwt7.rgdpch \nRenamed variable	 grgdpch 	to pwt7.grgdpch \nRenamed variable	 POP 	to pwt7.pop \nRenamed variable	 kg 	to pwt7.kg \nRenamed variable	 rgdpl 	to pwt7.rgdpl \nNew object size:	 3287264 bytes;	 38 variables	 11285 observations\n\n> detach(package:Hmisc)\n\n> library(ETLUtils)\nLoading required package: ff\nLoading required package: bit\nAttaching package bit\npackage:bit (c) 2008-2012 Jens Oehlschlaegel (GPL-2)\ncreators: bit bitwhich\ncoercion: as.logical as.integer as.bit as.bitwhich which\noperator: ! & | xor != ==\nquerying: print length any all min max range sum summary\nbit access: length<- [ [<- [[ [[<-\nfor more help type ?bit\n\nAttaching package: ‘bit’\n\nThe following object is masked from ‘package:base’:\n\n    xor\n\nAttaching package ff\n- getOption(\"fftempdir\")==\"/var/folders/gl/nvslsqg90693mz0f6_bpcz6r0000gn/T//RtmpuOPO96\"\n\n- getOption(\"ffextension\")==\"ff\"\n\n- getOption(\"ffdrop\")==TRUE\n\n- getOption(\"fffinonexit\")==TRUE\n\n- getOption(\"ffpagesize\")==65536\n\n- getOption(\"ffcaching\")==\"mmnoflush\"  -- consider \"ffeachflush\" if your system stalls on large writes\n\n- getOption(\"ffbatchbytes\")==16777216 -- consider a different value for tuning your system\n\n- getOption(\"ffmaxbytes\")==536870912 -- consider a different value for tuning your system\n\n\nAttaching package: ‘ff’\n\nThe following objects are masked from ‘package:bit’:\n\n    clone, clone.default, clone.list\n\nThe following objects are masked from ‘package:utils’:\n\n    write.csv, write.csv2\n\nThe following objects are masked from ‘package:base’:\n\n    is.factor, is.ordered\n\n\n> dd <- matchmerge(\n+   x = dd, y = pwt,\n+   by.x  = c(\"cowcode2\", \"year\"), by.y  = c(\"cowcode2\", \"year\"),\n+   all.x = TRUE,\n+   add.columns = c(\"pwt7 ...\" ... [TRUNCATED] \n2016-02-18 07:41:47: Creating key variables\n2016-02-18 07:41:47: Searching for key matches\n2016-02-18 07:41:47: Joining the data frames\n\n> # --- Tidy workspace ---------------------------------------\n> detach(package:ETLUtils)\n\n> detach(package:ff)\nDetaching package ff\n\n> detach(package:bit)\n\n> rm(pwt)\n\n> ## END\n> ## --- Define Variables ------------------------------------\n> source(\n+   file.path(pathCode, \"buildData\", \"VarDef.R\"), echo = TRUE\n+ )\n\n> ## =========================================================\n> ## === Heidelberg: Variable Definitions ====================\n> ## === (c) DT, 01.2013 .... [TRUNCATED] \n\n> addmargins(table(dd$gwf.reg.collapsed)) \n\n   PARTY MILITARY MONARCHY PERSONAL      Sum \n    2210      575      557     1103     4445 \n\n> # MILITARY MONARCHY    PARTY PERSONAL      Sum \n> #      575      557     2210     1103     4445 \n> table(dd$gwf.next.collapsed)\n\n MILITARY  MONARCHY     PARTY  PERSONAL DEMOCRACY     OTHER \n      732        17       250       678      1198       470 \n\n> # MILITARY  MONARCHY     PARTY  PERSONAL DEMOCRACY     OTHER \n> #      732        17       250       678      1198       470 \n> table(dd$gwf.reg.col .... [TRUNCATED] \n          \n           MILITARY MONARCHY PARTY PERSONAL DEMOCRACY OTHER\n  PARTY         206        0    10      193       647   103\n  MILITARY      103        0    43       14       302    65\n  MONARCHY       46        6    38       76        44     7\n  PERSONAL      126        0    62      165       142   250\n\n> #           MILITARY MONARCHY PARTY PERSONAL DEMOCRACY OTHER\n> #  MILITARY      103        0    43       14       302    65\n> #  MONARCHY       46   .... [TRUNCATED] \n          \n           PARTY MILITARY MONARCHY PERSONAL\n  PARTY     2210        0        0        0\n  MILITARY     0      575        0        0\n  MONARCHY     0        0      557        0\n  PERSONAL     0        0        0     1103\n\n> table(dd$gwf.geddes.collapsed, dd$gwf.fail, exclude = NULL)\n          \n              0    1 <NA>\n  PARTY    2155   55    0\n  MILITARY  499   76    0\n  MONARCHY  545   12    0\n  PERSONAL 1027   76    0\n  <NA>     3070  112 1532\n\n> # --- Compute DV -------------------------------------------\n> dd <- within(dd, {   # Compute DV excluding cases of foreign\n+   reg.fail <- gwf.fail .... [TRUNCATED] \n\n> summary(dd$tag)\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n 0.0000  0.0000  1.0000  0.5182  1.0000  1.0000 \n\n> addmargins(table(dd$tag))\n\n   0    1  Sum \n4413 4746 9159 \n\n> test <- dd[dd$tag==0, ]\n\n> nrow(test)\n[1] 4413\n\n> summary(test$reg.fail)\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n0.00000 0.00000 0.00000 0.04872 0.00000 1.00000 \n\n> table(test$reg.fail, exclude = NULL)\n\n   0    1 <NA> \n4198  215    0 \n\n> barplot(             # Regime failures before and after 1990\n+   prop.table(table(test$reg.fail, test$year), 2), \n+   beside = FALSE,\n+   ylim = c(0 .... [TRUNCATED] \n\n> addmargins(\n+   table(test$gwf.geddes.collapsed, test$reg.fail, \n+     exclude=NULL)\n+ )\n          \n              0    1 <NA>  Sum\n  PARTY    2151   54    0 2205\n  MILITARY  498   75    0  573\n  MONARCHY  545   12    0  557\n  PERSONAL 1004   74    0 1078\n  <NA>        0    0    0    0\n  Sum      4198  215    0 4413\n\n> #              0    1 <NA>\n> #  PARTY    2151   54    0\n> #  MILITARY  498   75    0\n> #  MONARCHY  545   12    0\n> #  PERSONAL 1004   74    0\n> #   .... [TRUNCATED] \n\n> ## =========================================================\n> \n> ## === Define vars =========================================\n> ## --- Economy ---- .... [TRUNCATED] \n\n> summary(dd[, c(\"pwt7.rgdpl\", \"pwt7.kg\", \"pwt7.rgdpl.cor\")])\n   pwt7.rgdpl          pwt7.kg       pwt7.rgdpl.cor    \n Min.   :   160.8   Min.   : 0.732   Min.   :   150.6  \n 1st Qu.:  1342.7   1st Qu.: 6.367   1st Qu.:  1165.4  \n Median :  3907.3   Median : 8.786   Median :  3500.1  \n Mean   :  8206.5   Mean   :11.567   Mean   :  7419.3  \n 3rd Qu.: 10620.6   3rd Qu.:13.899   3rd Qu.:  9468.1  \n Max.   :109972.6   Max.   :67.189   Max.   :101388.9  \n NA's   :1395       NA's   :1395     NA's   :1395      \n\n> head(dd[, c(\"pwt7.rgdpl\", \"pwt7.kg\", \"pwt7.rgdpl.cor\")])\n  pwt7.rgdpl  pwt7.kg pwt7.rgdpl.cor\n1         NA       NA             NA\n2         NA       NA             NA\n3         NA       NA             NA\n4         NA       NA             NA\n5   13046.23 10.19066       11716.73\n6   14141.46 13.77260       12193.81\n\n> library(Hmisc)\n\nAttaching package: ‘Hmisc’\n\nThe following objects are masked from ‘package:base’:\n\n    format.pval, round.POSIXt, trunc.POSIXt, units\n\n\n> dd <- paneldata.lags(\n+   dd, \"cowcode\", \"year\", \"pwt7.rgdpl.cor\", lags = 1\n+ )\n\n> detach(package:Hmisc)\n\n> dd <- within(dd, {\n+  pwt7.grrgdpl.cor <- (pwt7.rgdpl.cor/pwt7.rgdpl.cor.l1*100)-100  \n+  }\n+ )  \n\n> summary(dd[, c(\"pwt7.grrgdpl.cor\", \"pwt7.grgdpch\")])\n pwt7.grrgdpl.cor    pwt7.grgdpch     \n Min.   :-71.1508   Min.   :-64.4078  \n 1st Qu.: -0.7748   1st Qu.: -0.5468  \n Median :  2.3969   Median :  2.3489  \n Mean   :  2.3314   Mean   :  2.2495  \n 3rd Qu.:  5.4852   3rd Qu.:  5.2275  \n Max.   :127.5586   Max.   :115.4200  \n NA's   :1561       NA's   :1492      \n\n> ## --- Repression ------------------------------------------\n> ## --- (A) Physical Integrity Index ------------------------\n> ## This is an additive .... [TRUNCATED] \n\n> dd <- within(dd, {\n+   ciri.physint2 <- recode(ciri.physint, \n+     \"0 = 8; 1 = 7; 2 = 6; 3 = 5; 4 = 4; 5 = 3; 6 = 2; \n+     7 = 1; 8 = 0\")}\n+ )\n\n> detach(package:car)\n\n> summary(dd$ciri.physint2)\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's \n  0.000   1.000   3.000   3.078   5.000   8.000    4822 \n\n> ## --- (B) Political Freedoms ------------------------------\n> library(car)\n\n> dd <- within (dd, {\n+   ciri.speech2 <- ifelse(           # str to num and reverse\n+     ciri.speech == \"0. Complete\", 2, \n+      ifelse(ciri.speech .... [TRUNCATED] \n\n> dd$ciri.pf <- apply(                   ## row-wise sum index\n+   dd[, c(\"ciri.speech2\", \"ciri.worker2\", \"ciri.elecsd2\", \n+     \"ciri.assn2\")], 1, su .... [TRUNCATED] \n\n> apply(\n+   dd[, c(\"ciri.speech2\", \"ciri.worker2\", \"ciri.elecsd2\",\n+   \"ciri.assn2\", \"ciri.pf\")], 2, summary\n+ )\n        ciri.speech2 ciri.worker2 ciri.elecsd2 ciri.assn2  ciri.pf\nMin.          0.0000         0.00       0.0000     0.0000    0.000\n1st Qu.       0.0000         0.00       0.0000     0.0000    1.000\nMedian        1.0000         1.00       1.0000     1.0000    4.000\nMean          0.9754         1.05       0.8743     0.9028    3.801\n3rd Qu.       2.0000         2.00       2.0000     2.0000    6.000\nMax.          2.0000         2.00       2.0000     2.0000    8.000\nNA's       4792.0000      4793.00    4792.0000  4792.0000 4803.000\n\n> #        ciri.speech2 ciri.worker2 ciri.elecsd2 ciri.assn2 ciri.pf\n> # Min.           0.00          0.0         0.00        0.0     0.0\n> # 1st Qu.  .... [TRUNCATED] \n\n> ## --- Cooptation variables --------------------------------\n> ## cnts.polit10 <- cabinet size\n> ## lparty <- Gandhi legislatures & parties\n> \n> # = .... [TRUNCATED] \n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's \n  0.000   0.326   2.455  16.090  12.760 722.800    4384 \n\n> boxplot(dd$wdi.fe~dd$year)    # problem obs limited to <1975\n\n> boxplot(dd$wdi.fe~dd$gwf.geddes.collapsed)   # 1 problem obs\n\n> # no action taken, ciri omits years before 1981\n> # --- Cold war --------------------------------------------\n> dd <- within(dd, {\n+     coldwar <-  .... [TRUNCATED] \n\n> summary(dd$coldwar)\n  NO  YES \n3573 5561 \n\n> ## --- Elections -------------------------------------------\n> ## exselec -- executive elections\n> ## 1.  Direct\n> ## 2.  Indirect\n> ## 3.  Nonelect .... [TRUNCATED] \n\n> with(dd, table(exselec, eelections, exclude = NULL))\n       eelections\nexselec   NO  YES <NA>\n   0       0    1    0\n   1       0 2819    0\n   2       0 3816    0\n   3    2498    0    0\n   <NA>    0    0    0\n\n> with(dd, table(legselec, lelections, exclude = NULL))\n        lelections\nlegselec   NO  YES <NA>\n    0    1000    0    0\n    1     446    0    0\n    2       0 7688    0\n    <NA>    0    0    0\n\n> head(dd[with(dd, {exselec == 0}), c(\"ctryname\", \"year\")])\n         ctryname year\n434.4253    Benin 1963\n\n> ## 1 Coding error: Benin 1963, no consequences for analysis\n> \n> ## --- regional controls -----------------------------------\n> dd <- within(dd, {\n+ .... [TRUNCATED] \n\n> dd <- within(dd, {\n+   lparty2 <- factor(lparty,\n+     levels = c(0, 1, 2),\n+     labels = c(\"NoL\", \"L1Pa\", \"LmPa\")\n+   )\n+   lparty2 <- relevel(lpa .... [TRUNCATED] \n\n> ## --- Alternative dv's ------------------------------------\n> dd <- within(dd, {\n+     eheads.fail <- ifelse(eheads > 0, 1, 0)\n+ #    eheads.fail < .... [TRUNCATED] \n\n> ## =========================================================\n> ## === DF for analysis =====================================\n> vars <- c(\"cowcode\",\"c ...\" ... [TRUNCATED] \n\n> names(dd[names(dd) %in% vars])\n [1] \"ctryname\"             \"year\"                 \"cowcode\"             \n [4] \"cowcode2\"             \"un.region\"            \"un.region.name\"      \n [7] \"lparty\"               \"fh.cl\"                \"fh.pr\"               \n[10] \"gd.ptss\"              \"ht.region\"            \"wdi.fe\"              \n[13] \"cnts.polit10\"         \"gwf.geddes.collapsed\" \"pwt7.rgdpl\"          \n[16] \"pwt7.grgdpch\"         \"pwt7.rgdpch\"          \"pwt7.pop\"            \n[19] \"pwt7.kg\"              \"gwf.next.num\"         \"reg.fail\"            \n[22] \"pwt7.rgdpl.cor\"       \"pwt7.grrgdpl.cor\"     \"ciri.physint2\"       \n[25] \"ciri.pf\"              \"coldwar\"              \"eelections\"          \n[28] \"lelections\"           \"mena\"                 \"fsu\"                 \n[31] \"lparty2\"              \"eheads.Ifail\"         \"eheads.fail\"         \n\n> dd.anal <- dd[dd$tag==0 & dd$year >= 1981, vars]\n\n> rm(list = c(\"vars\"))\n\n> ## === Time Dependency =====================================\n> ## --- Past failures -- do future depend on past events? ---\n> dd.anal <- dd.anal[wit .... [TRUNCATED] \n\n> library(plyr)\n\n> dd.anal <- ddply(\n+   dd.anal,\n+   .variables = \"cowcode\",\n+   transform,             # no clue why, won't work otherwise\n+   cum.Fail = cumsum(reg. .... [TRUNCATED] \n\n> library(Hmisc)\n\nAttaching package: ‘Hmisc’\n\nThe following objects are masked from ‘package:plyr’:\n\n    is.discrete, summarize\n\nThe following objects are masked from ‘package:base’:\n\n    format.pval, round.POSIXt, trunc.POSIXt, units\n\n\n> dd.anal <- paneldata.lags( # lag so cum.Fail+1 in year AFTER fail!\n+   dd.anal, \"cowcode\", \"year\", c(\"cum.Fail\"), 1\n+ )\n\n> detach(package:Hmisc)\n\n> dd.anal$cum.Fail.l1[is.na(dd.anal$cum.Fail.l1) == TRUE] <- 0\n\n> exclude <- names(dd.anal) %in% c(\"cum.Fail\")\n\n> dd.anal <- dd.anal[!exclude]\n\n> rm(exclude)\n\n> library(reshape)\n\nAttaching package: ‘reshape’\n\nThe following objects are masked from ‘package:plyr’:\n\n    rename, round_any\n\n\n> dd.anal <- rename(dd.anal, c(cum.Fail.l1=\"cum.Fail\"))\n\n> detach(package:reshape)\n\n> summary(dd.anal$cum.Fail)\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n 0.0000  0.0000  0.0000  0.2654  0.0000  4.0000 \n\n> boxplot(dd.anal$cum.Fail~dd.anal$gwf.geddes.collapsed)\n\n> # --- Polynomials -- Carter/Signorino 2010 -----------------\n> attach(dd.anal)\n\n> byspell <- by(dd.anal[,\"cum.Fail\"], \n+               INDICES=cowcode,\n+               FUN=rle  # extract regime spell type & length\n+ )\n\n> detach(dd.anal)\n\n> # byspell == list of \n> # a) spell type ([[,\"values\"]]) &\n> # b) length ([[,\"lengths\"]])\n> # byspell is ordered by cowcode & year\n> # -------------- .... [TRUNCATED] \n\n> for(i in names(byspell))\n+   spellln <- append(spellln,\n+               byspell[[c(i,\"lengths\")]], # extract lengths &\n+               after=length( .... [TRUNCATED] \n\n> # Convert [[,\"values\"]] to vector of regime types \n> # necessary for consistency\n> # Compute running number of spell in cowcode2 as sequence\n> # fro .... [TRUNCATED] \n\n> for(i in names(byspell))\n+   spellno <- append(spellno,\n+                     seq(\n+                         1:length(\n+                             .... [TRUNCATED] \n\n> # Combine variables to df and clean\n> testdf <- data.frame(spellln, spellno)\n\n> rm(list=c(\"spellln\", \"spellno\", \"byspell\", \"i\"))\n\n> # Inflate df according to length of individual regime spells\n> testdf <- testdf[rep(1:nrow(testdf),times=testdf$spellln),]\n\n> # Previous command interferes with row names which \n> # are given running suffixes according to the number of \n> # copies (e.g \"1.24\" indicates row  .... [TRUNCATED] \n\n> rownames(testdf) <- NULL # reset modified rownames in df\n\n> runningpos <- strsplit(runningrow,\".\",fixed=TRUE) \n\n> # split string to list containing original row number\n> # and running index of copy\n> spellrn <- sapply(runningpos, \"[\", 2)\n\n> # extract index of copied entries as numeric vector\n> spellrn <- as.numeric(spellrn)\n\n> spellrn[is.na(spellrn)] <- 0\n\n> # NAs result from the original row number where there\n> # is no second element to extract with sapply()\n> # recoded to 0 \n> spellrn <- spellrn+1 # a .... [TRUNCATED] \n\n>                      # spellln\n> testdf <- data.frame(testdf,spellrn)\n\n> rm(list=c(\"runningrow\",\"runningpos\"))\n\n> # ----------------------------------------------------------\n> # combine df's\n> dd.anal <- data.frame(dd.anal, testdf)\n\n> rm(list=c(\"testdf\",\"spellrn\"))\n\n> dd.anal <- within(dd.anal, {\n+   spellrn2 <- spellrn^2\n+   spellrn3 <- spellrn^3}\n+ )\n\n> # spellln, spellln2, and spellln3 give time-dependency\n> # polynomials\n> library(reshape)\n\nAttaching package: ‘reshape’\n\nThe following objects are masked from ‘package:plyr’:\n\n    rename, round_any\n\n\n> dd.anal <- rename(dd.anal, c(gwf.geddes.collapsed = \"type\"))\n\n> detach(package:reshape)\n\n> row.names(dd.anal) <- paste(\n+   dd.anal$cowcode, dd.anal$year, sep = \":\"\n+ )\n\n> ## END \n> save.image(file = file.path(pathOut, 'base.RData'))\n> ## --- Model development -----------------------------------\n> source(\n+   file.path(pathCode, 'buildModel', '01_defineAdditionalVariables.R'),\n+   verbose = TRUE\n+ )\n'envir' chosen:<environment: R_GlobalEnv>\nencoding = \"native.enc\" chosen\n--> parsed 76 expressions; now eval(.)ing them:\n\n>>>> eval(expression_nr. 1 )\n		 =================\n\n> # This script defines additional variables for the analysis\n> # and lags them by 1 year.\n> \n> # Lag all variables by one year ---------------------- .... [TRUNCATED] \n\nAttaching package: ‘Hmisc’\n\nThe following objects are masked from ‘package:plyr’:\n\n    is.discrete, summarize\n\nThe following objects are masked from ‘package:base’:\n\n    format.pval, round.POSIXt, trunc.POSIXt, units\n\ncurr.fun: symbol library\n .. after ‘expression(library(Hmisc))’\n\n>>>> eval(expression_nr. 2 )\n		 =================\n\n> dd.anal <- paneldata.lags(dd.anal, \"cowcode\", \"year\", \n+   c(\"type\",                                        # Regtype\n+   \"ciri.physint2\", \"ciri.pf\" .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.anal <- paneldata.lags(dd.anal, \"cowcode\", \"year\", ’‘  c(\"type\",                                        # Regtype’‘  \"ciri.physint2\", \"ciri.pf\", \"fh.cl\", \"fh.pr\", # repression’‘  \"lparty2\", \"lparty\",                        # institutions’‘  \"pwt7.rgdpch\", \"pwt7.grgdpch\",                   # economy’‘  \"cnts.polit10\",                              # co-optation’‘  \"wdi.fe\",’‘  \"eelections\", \"lelections\", \"coldwar\", \"pwt7.kg\",’‘  \"pwt7.grrgdpl.cor\", \"pwt7.rgdpl.cor\", \"gd.ptss\"),’‘  lags=1:3’‘))’\n\n>>>> eval(expression_nr. 3 )\n		 =================\n\n> detach(package:Hmisc)\ncurr.fun: symbol detach\n .. after ‘expression(detach(package:Hmisc))’\n\n>>>> eval(expression_nr. 4 )\n		 =================\n\n> with(dd.anal, levels(lparty2)) # generate factor from lagged\ncurr.fun: symbol with\n[1] \"L1Pa\" \"NoL\"  \"LmPa\"\n .. after ‘expression(with(dd.anal, levels(lparty2)))’\n\n>>>> eval(expression_nr. 5 )\n		 =================\n\n> with(dd.anal, table(lparty2.l1))\ncurr.fun: symbol with\nlparty2.l1\n  1   2   3 \n529 455 959 \n .. after ‘expression(with(dd.anal, table(lparty2.l1)))’\n\n>>>> eval(expression_nr. 6 )\n		 =================\n\n> dd.anal <- within(dd.anal, {\n+     lparty2.l1 <- factor(lparty2.l1,\n+       levels = c(1, 2, 3),\n+       labels = c(\"L1Pa\", \"NoL\", \"LmPa\")\n+     )\n+ .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.anal <- within(dd.anal, {’‘    lparty2.l1 <- factor(lparty2.l1,’‘      levels = c(1, 2, 3),’‘      labels = c(\"L1Pa\", \"NoL\", \"LmPa\")’‘    )’‘    lparty2.l1 <- relevel(lparty2.l1, ref = \"L1Pa\")’‘    lparty2.diff <- ifelse(’‘      as.numeric(lparty2) != as.numeric(lparty2.l1), 1, 0)’‘  }’‘))’\n\n>>>> eval(expression_nr. 7 )\n		 =================\n\n> with(dd.anal, table(reg.fail, lparty2.diff))\ncurr.fun: symbol with\n        lparty2.diff\nreg.fail    0    1\n       0 1775   70\n       1   51   47\n .. after ‘expression(with(dd.anal, table(reg.fail, lparty2.diff)))’\n\n>>>> eval(expression_nr. 8 )\n		 =================\n\n> with(dd.anal, table(type))\ncurr.fun: symbol with\ntype\n   PARTY MILITARY MONARCHY PERSONAL \n     998      242      211      610 \n .. after ‘expression(with(dd.anal, table(type)))’\n\n>>>> eval(expression_nr. 9 )\n		 =================\n\n> dd.anal <- within(dd.anal, {\n+     type.l1 <- factor(type.l1,\n+       levels = c(1, 2, 3, 4),\n+       labels = c(\"PARTY\", \"MILITARY\", \"MONARCHY\", \"P ...\" ... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.anal <- within(dd.anal, {’‘    type.l1 <- factor(type.l1,’‘      levels = c(1, 2, 3, 4),’‘      labels = c(\"PARTY\", \"MILITARY\", \"MONARCHY\", \"PERSONAL\")’‘    )’‘    type.l1 <- relevel(type.l1, ref = \"PARTY\")’‘  }’‘))’\n\n>>>> eval(expression_nr. 10 )\n		 =================\n\n> with(dd.anal, table(type.l1))\ncurr.fun: symbol with\ntype.l1\n   PARTY MILITARY MONARCHY PERSONAL \n     953      222      203      573 \n .. after ‘expression(with(dd.anal, table(type.l1)))’\n\n>>>> eval(expression_nr. 11 )\n		 =================\n\n> dd.anal <- within(dd.anal, {\n+     coldwar.l1 <- factor(coldwar.l1,\n+       levels = c(1, 2),\n+       labels = c(\"NO\", \"YES\")\n+     )\n+   }\n+ )\ncurr.fun: symbol <-\n .. after ‘expression(dd.anal <- within(dd.anal, {’‘    coldwar.l1 <- factor(coldwar.l1,’‘      levels = c(1, 2),’‘      labels = c(\"NO\", \"YES\")’‘    )’‘  }’‘))’\n\n>>>> eval(expression_nr. 12 )\n		 =================\n\n> ## Sample statistics ---------------------------------------\n> dd.1981 <- subset(dd.anal, year >= 1981)   # df for analysis\ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- subset(dd.anal, year >= 1981))’\n\n>>>> eval(expression_nr. 13 )\n		 =================\n\n> nrow(dd.1981)                                   ## 2061 cyrs\ncurr.fun: symbol nrow\n[1] 2061\n .. after ‘expression(nrow(dd.1981))’\n\n>>>> eval(expression_nr. 14 )\n		 =================\n\n> with(dd.1981,                                  \n+   length(unique(paste(cowcode, spellno, sep = \":\")))\n+ )                                           .... [TRUNCATED] \ncurr.fun: symbol with\n[1] 160\n .. after ‘expression(with(dd.1981,                                  ’‘  length(unique(paste(cowcode, spellno, sep = \":\")))’‘))’\n\n>>>> eval(expression_nr. 15 )\n		 =================\n\n> with(dd.1981, length(unique(cowcode)))       # 110 countries\ncurr.fun: symbol with\n[1] 110\n .. after ‘expression(with(dd.1981, length(unique(cowcode))))’\n\n>>>> eval(expression_nr. 16 )\n		 =================\n\n> ## Survival time distribution ------------------------------\n> test <- with(dd.1981, {\n+   aggregate(\n+     cbind(reg.fail, spellrn) ~ cowcode + spe .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(test <- with(dd.1981, {’‘  aggregate(’‘    cbind(reg.fail, spellrn) ~ cowcode + spellno,’‘    FUN = max,’‘    data = dd.1981’‘    )’‘  }’‘))’\n\n>>>> eval(expression_nr. 17 )\n		 =================\n\n> names(test)\ncurr.fun: symbol names\n[1] \"cowcode\"  \"spellno\"  \"reg.fail\" \"spellrn\" \n .. after ‘expression(names(test))’\n\n>>>> eval(expression_nr. 18 )\n		 =================\n\n> table(test$reg.fail)                ##    102 failure events\ncurr.fun: symbol table\n\n  0   1 \n 58 102 \n .. after ‘expression(table(test$reg.fail))’\n\n>>>> eval(expression_nr. 19 )\n		 =================\n\n> mean(test$reg.fail)               ## 63.75 percent of spells\ncurr.fun: symbol mean\n[1] 0.6375\n .. after ‘expression(mean(test$reg.fail))’\n\n>>>> eval(expression_nr. 20 )\n		 =================\n\n> summary(test$spellrn)\ncurr.fun: symbol summary\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n   1.00    6.00   11.00   12.88   19.00   28.00 \n .. after ‘expression(summary(test$spellrn))’\n\n>>>> eval(expression_nr. 21 )\n		 =================\n\n>                                            ## Survival times\n>             ## Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n>             ## 1.00    .... [TRUNCATED] \ncurr.fun: symbol library\n .. after ‘expression(library(survival))’\n\n>>>> eval(expression_nr. 22 )\n		 =================\n\n> sfit <- survfit(              \n+   Surv(time = spellrn,\n+     event = reg.fail\n+   )~1,\n+   data = test                 \n+ )\ncurr.fun: symbol <-\n .. after ‘expression(sfit <- survfit(              ’‘  Surv(time = spellrn,’‘    event = reg.fail’‘  )~1,’‘  data = test                 ’‘))’\n\n>>>> eval(expression_nr. 23 )\n		 =================\n\n> summary(sfit)                 ## 10 yrs median survival time\ncurr.fun: symbol summary\nCall: survfit(formula = Surv(time = spellrn, event = reg.fail) ~ 1, \n    data = test)\n\n time n.risk n.event survival std.err lower 95% CI upper 95% CI\n    1    160      11    0.931  0.0200        0.893        0.971\n    2    149       8    0.881  0.0256        0.833        0.933\n    3    141       6    0.844  0.0287        0.789        0.902\n    4    133       5    0.812  0.0309        0.754        0.875\n    5    128       6    0.774  0.0332        0.712        0.842\n    6    121       6    0.736  0.0350        0.670        0.808\n    7    115       5    0.704  0.0363        0.636        0.778\n    8    110       6    0.665  0.0376        0.596        0.743\n    9    103       6    0.626  0.0386        0.555        0.707\n   10     94       8    0.573  0.0396        0.501        0.656\n   11     85      10    0.506  0.0403        0.433        0.591\n   12     73       5    0.471  0.0404        0.398        0.557\n   13     67       3    0.450  0.0404        0.377        0.537\n   14     64       6    0.408  0.0401        0.336        0.494\n   17     51       1    0.400  0.0401        0.328        0.487\n   19     43       4    0.363  0.0405        0.291        0.451\n   20     37       3    0.333  0.0406        0.262        0.423\n   22     32       1    0.323  0.0406        0.252        0.413\n   24     30       1    0.312  0.0407        0.242        0.403\n   25     29       1    0.301  0.0407        0.231        0.393\n .. after ‘expression(summary(sfit))’\n\n>>>> eval(expression_nr. 24 )\n		 =================\n\n> plot(sfit)\ncurr.fun: symbol plot\n .. after ‘expression(plot(sfit))’\n\n>>>> eval(expression_nr. 25 )\n		 =================\n\n> detach(package:survival)      ## decreasing hazard over time\ncurr.fun: symbol detach\n .. after ‘expression(detach(package:survival))’\n\n>>>> eval(expression_nr. 26 )\n		 =================\n\n> rm(list=c(\"sfit\", \"test\"))\ncurr.fun: symbol rm\n .. after ‘expression(rm(list=c(\"sfit\", \"test\")))’\n\n>>>> eval(expression_nr. 27 )\n		 =================\n\n> # Economic shocks ------------------------------------------\n> ## Is filtering required? ----------------------------------\n> summary(dd.1981[, c(\"p ...\" ... [TRUNCATED] \ncurr.fun: symbol summary\n pwt7.grrgdpl.cor  pwt7.grrgdpl.cor.l1\n Min.   :-48.351   Min.   :-48.351    \n 1st Qu.: -2.166   1st Qu.: -2.167    \n Median :  1.907   Median :  1.894    \n Mean   :  1.667   Mean   :  1.712    \n 3rd Qu.:  5.388   3rd Qu.:  5.406    \n Max.   :109.085   Max.   :109.085    \n NA's   :152       NA's   :256        \n .. after ‘expression(summary(dd.1981[, c(\"pwt7.grrgdpl.cor\", \"pwt7.grrgdpl.cor.l1\")]))’\n\n>>>> eval(expression_nr. 28 )\n		 =================\n\n> with(dd.1981, {\n+   boxplot(pwt7.grrgdpl.cor.l1 ~ cowcode)\n+   }\n+ )            \ncurr.fun: symbol with\n .. after ‘expression(with(dd.1981, {’‘  boxplot(pwt7.grrgdpl.cor.l1 ~ cowcode)’‘  }’‘))’\n\n>>>> eval(expression_nr. 29 )\n		 =================\n\n> with(dd.1981, {\n+   boxplot(\n+     by(\n+       pwt7.grrgdpl.cor.l1, INDICES = cowcode, FUN = sd,\n+       na.rm = TRUE\n+     )\n+   )\n+   }\n+ )\ncurr.fun: symbol with\n .. after ‘expression(with(dd.1981, {’‘  boxplot(’‘    by(’‘      pwt7.grrgdpl.cor.l1, INDICES = cowcode, FUN = sd,’‘      na.rm = TRUE’‘    )’‘  )’‘  }’‘))’\n\n>>>> eval(expression_nr. 30 )\n		 =================\n\n>              ## both visualisations:\n>              ## tremendous differences in median, spread, sd\n>              ## -> filter justified\n> \n> ## -- .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- within(dd.1981, {’‘  delta.grgdp <- pwt7.grrgdpl.cor - pwt7.grrgdpl.cor.l1’‘  tag1 <- ifelse(delta.grgdp < -2.0, 1, 0)’‘  tag2 <- ifelse(pwt7.grrgdpl.cor < 2.0, 1, 0)’‘  tag3 <- ifelse(tag1 == 1 & tag2 == 1, 1, 0)’‘  }’‘))’\n\n>>>> eval(expression_nr. 31 )\n		 =================\n\n> mean(dd.1981$delta.grgdp, na.rm = TRUE)\ncurr.fun: symbol mean\n[1] 0.07010601\n .. after ‘expression(mean(dd.1981$delta.grgdp, na.rm = TRUE))’\n\n>>>> eval(expression_nr. 32 )\n		 =================\n\n> summary(dd.1981[, c(\"delta.grgdp\", \"tag1\", \"tag2\", \"tag3\")])\ncurr.fun: symbol summary\n  delta.grgdp              tag1             tag2             tag3       \n Min.   :-124.40587   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  \n 1st Qu.:  -3.88695   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  \n Median :   0.07404   Median :0.0000   Median :1.0000   Median :0.0000  \n Mean   :   0.07011   Mean   :0.3468   Mean   :0.5071   Mean   :0.2615  \n 3rd Qu.:   3.85330   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000  \n Max.   : 157.43660   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  \n NA's   :256          NA's   :256      NA's   :152      NA's   :210     \n .. after ‘expression(summary(dd.1981[, c(\"delta.grgdp\", \"tag1\", \"tag2\", \"tag3\")]))’\n\n>>>> eval(expression_nr. 33 )\n		 =================\n\n> library(Hmisc)\nLoading required package: survival\n\nAttaching package: ‘Hmisc’\n\nThe following objects are masked from ‘package:plyr’:\n\n    is.discrete, summarize\n\nThe following objects are masked from ‘package:base’:\n\n    format.pval, round.POSIXt, trunc.POSIXt, units\n\ncurr.fun: symbol library\n .. after ‘expression(library(Hmisc))’\n\n>>>> eval(expression_nr. 34 )\n		 =================\n\n> dd.1981 <- paneldata.lags(\n+   dd.1981, \"cowcode\", \"year\",\n+   \"tag3\",\n+   lags = 1:2\n+ )\ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- paneldata.lags(’‘  dd.1981, \"cowcode\", \"year\",’‘  \"tag3\",’‘  lags = 1:2’‘))’\n\n>>>> eval(expression_nr. 35 )\n		 =================\n\n> detach(package:Hmisc)\ncurr.fun: symbol detach\n .. after ‘expression(detach(package:Hmisc))’\n\n>>>> eval(expression_nr. 36 )\n		 =================\n\n> dd.1981 <- within(dd.1981, {\n+     eshock <- ifelse(\n+       tag3 == 1 | tag3.l1 == 1 | tag3.l2 == 1, 1, 0\n+     )\n+     eshock <- factor(\n+       e .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- within(dd.1981, {’‘    eshock <- ifelse(’‘      tag3 == 1 | tag3.l1 == 1 | tag3.l2 == 1, 1, 0’‘    )’‘    eshock <- factor(’‘      eshock, levels = c(0, 1), labels = c(\"NO\", \"YES\")’‘    )’‘    tag3.l1 <- factor(’‘      tag3.l1, levels = c(0, 1), labels = c(\"NO\", \"YES\")’‘    )’‘  }’‘))’\n\n>>>> eval(expression_nr. 37 )\n		 =================\n\n> table(dd.1981$eshock, exclude = NULL)\ncurr.fun: symbol table\n\n  NO  YES <NA> \n 595 1111  355 \n .. after ‘expression(table(dd.1981$eshock, exclude = NULL))’\n\n>>>> eval(expression_nr. 38 )\n		 =================\n\n> table(dd.1981$tag3.l1, exclude = NULL)\ncurr.fun: symbol table\n\n  NO  YES <NA> \n1293  454  314 \n .. after ‘expression(table(dd.1981$tag3.l1, exclude = NULL))’\n\n>>>> eval(expression_nr. 39 )\n		 =================\n\n> with(dd.1981, {\n+   table(ht.region, eshock, exclude = NULL)\n+   }\n+ )               ## follows Petrova, Bates regional patterns, \ncurr.fun: symbol with\n                                         eshock\nht.region                                  NO YES <NA>\n  1. Eastern Europe and post Soviet Union  88  75   93\n  2. Latin America                         56  82   24\n  3. North Africa & the Middle East        94 209   73\n  4. Sub-Saharan Africa                   201 622   76\n  5. Western Europe and North America       0   0    0\n  6. East Asia                             38  23   35\n  7. South-East Asia                       99  61   43\n  8. South Asia                            19  39   11\n  9. The Pacific                            0   0    0\n  10. The Caribbean                         0   0    0\n  <NA>                                      0   0    0\n .. after ‘expression(with(dd.1981, {’‘  table(ht.region, eshock, exclude = NULL)’‘  }’‘))’\n\n>>>> eval(expression_nr. 40 )\n		 =================\n\n>                                   ## but has way more events\n> with(dd.1981, table(eheads.fail, eshock))\ncurr.fun: symbol with\n           eshock\neheads.fail   NO  YES\n          0  541 1005\n          1   54  106\n .. after ‘expression(with(dd.1981, table(eheads.fail, eshock)))’\n\n>>>> eval(expression_nr. 41 )\n		 =================\n\n> with(dd.1981, table(eheads.fail, tag3.l1))\ncurr.fun: symbol with\n           tag3.l1\neheads.fail   NO  YES\n          0 1180  405\n          1  113   49\n .. after ‘expression(with(dd.1981, table(eheads.fail, tag3.l1)))’\n\n>>>> eval(expression_nr. 42 )\n		 =================\n\n> ## Tables indicate weak association between eheads.fail and\n> ## economic shock indicators\n> \n> ## --- Alternative filter -------------------------- .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- within(dd.1981, {’‘    grneg.m2 <- ifelse(pwt7.grrgdpl.cor.l1 < -2, 1, 0)’‘    grneg.m2 <- factor(grneg.m2,’‘      levels = c(0, 1),’‘      labels = c(\"NO\", \"YES\")’‘    )’‘    grneg.m15 <- ifelse(pwt7.grrgdpl.cor.l1 < -1.5, 1, 0)’‘    grneg.m15 <- factor(grneg.m15,’‘      levels = c(0, 1),’‘      labels = c(\"NO\", \"YES\")’‘    )’‘    grneg.m1 <- ifelse(pwt7.grrgdpl.cor.l1 < -1, 1, 0)’‘    grneg.m1 <- factor(grneg.m1,’‘      levels = c(0, 1),’‘      labels = c(\"NO\", \"YES\")’‘    )’‘    grneg.m05 <- ifelse(pwt7.grrgdpl.cor.l1 < -0.5, 1, 0)’‘    grneg.m05 <- factor(grneg.m05,’‘      levels = c(0, 1),’‘      labels = c(\"NO\", \"YES\")’‘    )’‘    grneg.0 <- ifelse(pwt7.grrgdpl.cor.l1 < 0, 1, 0)’‘    grneg.0 <- factor(grneg.0,’‘      levels = c(0, 1),’‘      labels = c(\"NO\", \"YES\")’‘    )’‘    grneg.05 <- ifelse(pwt7.grrgdpl.cor.l1 < .5, 1, 0)’‘    grneg.05 <- factor(grneg.05,’‘      levels = c(0, 1),’‘      labels = c(\"NO\", \"YES\")’‘    )’‘    grneg.1 <- ifelse(pwt7.grrgdpl.cor.l1 < 1, 1, 0)’‘    grneg.1 <- factor(grneg.1,’‘      levels = c(0, 1),’‘      labels = c(\"NO\", \"YES\")’‘    )’‘    grneg.15 <- ifelse(pwt7.grrgdpl.cor.l1 < 1.5, 1, 0)’‘    grneg.15 <- factor(grneg.15,’‘      levels = c(0, 1),’‘      labels = c(\"NO\", \"YES\")’‘    )’‘    grneg.2 <- ifelse(pwt7.grrgdpl.cor.l1 < 2, 1, 0)’‘    grneg.2 <- factor(grneg.2,’‘      levels = c(0, 1),’‘      labels = c(\"NO\", \"YES\")’‘    )’‘  }’‘))’\n\n>>>> eval(expression_nr. 43 )\n		 =================\n\n> apply(dd.1981[, grep(patter = \"grneg.\", names(dd.1981))], 2,\n+   table)\ncurr.fun: symbol apply\n    grneg.2 grneg.15 grneg.1 grneg.05 grneg.0 grneg.m05 grneg.m1 grneg.m15\nNO      887      964    1025     1091    1144      1202     1263      1308\nYES     918      841     780      714     661       603      542       497\n    grneg.m2\nNO      1341\nYES      464\n .. after ‘expression(apply(dd.1981[, grep(patter = \"grneg.\", names(dd.1981))], 2,’‘  table))’\n\n>>>> eval(expression_nr. 44 )\n		 =================\n\n> ## Growth in gdp correcting for delta in gov spending\n> dd.1981 <- within(dd.1981, delta.kg <- pwt7.kg - pwt7.kg.l1)\ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- within(dd.1981, delta.kg <- pwt7.kg - pwt7.kg.l1))’\n\n>>>> eval(expression_nr. 45 )\n		 =================\n\n> summary(dd.1981$delta.kg)\ncurr.fun: symbol summary\n     Min.   1st Qu.    Median      Mean   3rd Qu.      Max.      NA's \n-23.98000  -0.50720  -0.05877  -0.07774   0.35800  27.17000       242 \n .. after ‘expression(summary(dd.1981$delta.kg))’\n\n>>>> eval(expression_nr. 46 )\n		 =================\n\n> with(dd.1981, \n+   cor(delta.grgdp, delta.kg, use = \"complete.obs\")\n+ )\ncurr.fun: symbol with\n[1] -0.4911503\n .. after ‘expression(with(dd.1981, ’‘  cor(delta.grgdp, delta.kg, use = \"complete.obs\")’‘))’\n\n>>>> eval(expression_nr. 47 )\n		 =================\n\n> with(dd.1981, plot(delta.grgdp, delta.kg))\ncurr.fun: symbol with\n .. after ‘expression(with(dd.1981, plot(delta.grgdp, delta.kg)))’\n\n>>>> eval(expression_nr. 48 )\n		 =================\n\n> # the smaller the growth rate, the larger the government\n> # spending\n> \n> ## Accumulated growth experience indicators ----------------\n> dd.1981 <- .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- within(dd.1981, {’‘  pos.dum <- ifelse(pwt7.grgdpch > 0, 1, 0)’‘  pos.dum <- ifelse(is.na(pos.dum) == TRUE, 0, pos.dum)’‘  neg.dum <- ifelse(pwt7.grgdpch < 0, 1, 0)’‘  neg.dum <- ifelse(is.na(neg.dum) == TRUE, 0, neg.dum)’‘  }’‘))’\n\n>>>> eval(expression_nr. 49 )\n		 =================\n\n> summary(dd.1981[, c(\"pwt7.grgdpch\", \"pos.dum\", \"neg.dum\")])\ncurr.fun: symbol summary\n  pwt7.grgdpch        pos.dum          neg.dum      \n Min.   :-50.954   Min.   :0.0000   Min.   :0.0000  \n 1st Qu.: -1.796   1st Qu.:0.0000   1st Qu.:0.0000  \n Median :  1.812   Median :1.0000   Median :0.0000  \n Mean   :  1.498   Mean   :0.5885   Mean   :0.3387  \n 3rd Qu.:  5.162   3rd Qu.:1.0000   3rd Qu.:1.0000  \n Max.   : 84.201   Max.   :1.0000   Max.   :1.0000  \n NA's   :150                                        \n .. after ‘expression(summary(dd.1981[, c(\"pwt7.grgdpch\", \"pos.dum\", \"neg.dum\")]))’\n\n>>>> eval(expression_nr. 50 )\n		 =================\n\n> library(Hmisc)            ## define spells of pos/neg growth\n\nAttaching package: ‘Hmisc’\n\nThe following objects are masked from ‘package:plyr’:\n\n    is.discrete, summarize\n\nThe following objects are masked from ‘package:base’:\n\n    format.pval, round.POSIXt, trunc.POSIXt, units\n\ncurr.fun: symbol library\n .. after ‘expression(library(Hmisc))’\n\n>>>> eval(expression_nr. 51 )\n		 =================\n\n> dd.1981 <- paneldata.lags(dd.1981, \"cowcode\", \"year\",\n+   c(\"pos.dum\", \"neg.dum\"), lags = 1)\ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- paneldata.lags(dd.1981, \"cowcode\", \"year\",’‘  c(\"pos.dum\", \"neg.dum\"), lags = 1))’\n\n>>>> eval(expression_nr. 52 )\n		 =================\n\n> detach(package:Hmisc)\ncurr.fun: symbol detach\n .. after ‘expression(detach(package:Hmisc))’\n\n>>>> eval(expression_nr. 53 )\n		 =================\n\n> dd.1981 <- within(dd.1981, {\n+   pos.dum.l1 <- ifelse(pos.dum == 1 & \n+     is.na(pos.dum.l1) == TRUE, 1, pos.dum.l1)\n+   pos.dum.l1 <- ifelse(pos.d .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- within(dd.1981, {’‘  pos.dum.l1 <- ifelse(pos.dum == 1 & ’‘    is.na(pos.dum.l1) == TRUE, 1, pos.dum.l1)’‘  pos.dum.l1 <- ifelse(pos.dum == 0 & ’‘    is.na(pos.dum.l1) == TRUE, 0, pos.dum.l1)’‘  neg.dum.l1 <- ifelse(neg.dum == 1 & ’‘    is.na(neg.dum.l1) == TRUE, 1, neg.dum.l1)’‘  neg.dum.l1 <- ifelse(neg.dum == 0 & ’‘    is.na(neg.dum.l1) == TRUE, 0, neg.dum.l1)’‘  pos2neg.tag <- ifelse(neg.dum == 1 & pos.dum.l1 == 1, 1, 0)’‘  neg2pos.tag <- ifelse(pos.dum == 1 & neg.dum.l1 == 1, 1, 0)’‘  }’‘))’\n\n>>>> eval(expression_nr. 54 )\n		 =================\n\n> summary(dd.1981[, c(\"pos.dum.l1\", \"neg.dum.l1\")])\ncurr.fun: symbol summary\n   pos.dum.l1       neg.dum.l1    \n Min.   :0.0000   Min.   :0.0000  \n 1st Qu.:0.0000   1st Qu.:0.0000  \n Median :1.0000   Median :0.0000  \n Mean   :0.5803   Mean   :0.3406  \n 3rd Qu.:1.0000   3rd Qu.:1.0000  \n Max.   :1.0000   Max.   :1.0000  \n .. after ‘expression(summary(dd.1981[, c(\"pos.dum.l1\", \"neg.dum.l1\")]))’\n\n>>>> eval(expression_nr. 55 )\n		 =================\n\n> summary(dd.1981[, c(\"pos2neg.tag\", \"neg2pos.tag\")])\ncurr.fun: symbol summary\n  pos2neg.tag     neg2pos.tag    \n Min.   :0.000   Min.   :0.0000  \n 1st Qu.:0.000   1st Qu.:0.0000  \n Median :0.000   Median :0.0000  \n Mean   :0.149   Mean   :0.1572  \n 3rd Qu.:0.000   3rd Qu.:0.0000  \n Max.   :1.000   Max.   :1.0000  \n .. after ‘expression(summary(dd.1981[, c(\"pos2neg.tag\", \"neg2pos.tag\")]))’\n\n>>>> eval(expression_nr. 56 )\n		 =================\n\n> dd.1981 <- dd.1981[with(dd.1981, {order(cowcode, year)}), ]\ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- dd.1981[with(dd.1981, {order(cowcode, year)}), ])’\n\n>>>> eval(expression_nr. 57 )\n		 =================\n\n> library(plyr)\ncurr.fun: symbol library\n .. after ‘expression(library(plyr))’\n\n>>>> eval(expression_nr. 58 )\n		 =================\n\n> dd.1981 <- ddply(          # count spell within regime spell\n+   dd.1981,\n+   .variables = c(\"cowcode\", \"spellno\"),\n+   transform,\n+   pos.spell = c .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- ddply(          # count spell within regime spell’‘  dd.1981,’‘  .variables = c(\"cowcode\", \"spellno\"),’‘  transform,’‘  pos.spell = cumsum(pos2neg.tag)’‘))’\n\n>>>> eval(expression_nr. 59 )\n		 =================\n\n> names(dd.1981)\ncurr.fun: symbol names\n  [1] \"cowcode\"             \"cowcode2\"            \"year\"               \n  [4] \"ctryname\"            \"reg.fail\"            \"type\"               \n  [7] \"ciri.physint2\"       \"ciri.pf\"             \"fh.cl\"              \n [10] \"fh.pr\"               \"lparty2\"             \"lparty\"             \n [13] \"pwt7.rgdpch\"         \"pwt7.grgdpch\"        \"cnts.polit10\"       \n [16] \"un.region\"           \"un.region.name\"      \"wdi.fe\"             \n [19] \"ht.region\"           \"eelections\"          \"lelections\"         \n [22] \"coldwar\"             \"mena\"                \"fsu\"                \n [25] \"pwt7.pop\"            \"gwf.next.num\"        \"eheads.fail\"        \n [28] \"eheads.Ifail\"        \"pwt7.kg\"             \"pwt7.rgdpl\"         \n [31] \"pwt7.rgdpl.cor\"      \"pwt7.grrgdpl.cor\"    \"gd.ptss\"            \n [34] \"cum.Fail\"            \"spellln\"             \"spellno\"            \n [37] \"spellrn\"             \"spellrn3\"            \"spellrn2\"           \n [40] \"type.l1\"             \"type.l2\"             \"type.l3\"            \n [43] \"ciri.physint2.l1\"    \"ciri.physint2.l2\"    \"ciri.physint2.l3\"   \n [46] \"ciri.pf.l1\"          \"ciri.pf.l2\"          \"ciri.pf.l3\"         \n [49] \"fh.cl.l1\"            \"fh.cl.l2\"            \"fh.cl.l3\"           \n [52] \"fh.pr.l1\"            \"fh.pr.l2\"            \"fh.pr.l3\"           \n [55] \"lparty2.l1\"          \"lparty2.l2\"          \"lparty2.l3\"         \n [58] \"lparty.l1\"           \"lparty.l2\"           \"lparty.l3\"          \n [61] \"pwt7.rgdpch.l1\"      \"pwt7.rgdpch.l2\"      \"pwt7.rgdpch.l3\"     \n [64] \"pwt7.grgdpch.l1\"     \"pwt7.grgdpch.l2\"     \"pwt7.grgdpch.l3\"    \n [67] \"cnts.polit10.l1\"     \"cnts.polit10.l2\"     \"cnts.polit10.l3\"    \n [70] \"wdi.fe.l1\"           \"wdi.fe.l2\"           \"wdi.fe.l3\"          \n [73] \"eelections.l1\"       \"eelections.l2\"       \"eelections.l3\"      \n [76] \"lelections.l1\"       \"lelections.l2\"       \"lelections.l3\"      \n [79] \"coldwar.l1\"          \"coldwar.l2\"          \"coldwar.l3\"         \n [82] \"pwt7.kg.l1\"          \"pwt7.kg.l2\"          \"pwt7.kg.l3\"         \n [85] \"pwt7.grrgdpl.cor.l1\" \"pwt7.grrgdpl.cor.l2\" \"pwt7.grrgdpl.cor.l3\"\n [88] \"pwt7.rgdpl.cor.l1\"   \"pwt7.rgdpl.cor.l2\"   \"pwt7.rgdpl.cor.l3\"  \n [91] \"gd.ptss.l1\"          \"gd.ptss.l2\"          \"gd.ptss.l3\"         \n [94] \"lparty2.diff\"        \"tag3\"                \"tag2\"               \n [97] \"tag1\"                \"delta.grgdp\"         \"tag3.l1\"            \n[100] \"tag3.l2\"             \"eshock\"              \"grneg.2\"            \n[103] \"grneg.15\"            \"grneg.1\"             \"grneg.05\"           \n[106] \"grneg.0\"             \"grneg.m05\"           \"grneg.m1\"           \n[109] \"grneg.m15\"           \"grneg.m2\"            \"delta.kg\"           \n[112] \"neg.dum\"             \"pos.dum\"             \"pos.dum.l1\"         \n[115] \"neg.dum.l1\"          \"neg2pos.tag\"         \"pos2neg.tag\"        \n[118] \"pos.spell\"          \n .. after ‘expression(names(dd.1981))’\n\n>>>> eval(expression_nr. 60 )\n		 =================\n\n> dd.1981 <- ddply(   # count consecutive obs within pos.spell\n+   dd.1981,\n+   .variables = c(\"cowcode\", \"spellno\", \"pos.spell\"),\n+   transform,\n+    .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- ddply(   # count consecutive obs within pos.spell’‘  dd.1981,’‘  .variables = c(\"cowcode\", \"spellno\", \"pos.spell\"),’‘  transform,’‘  pos.run = cumsum(pos.dum)’‘))’\n\n>>>> eval(expression_nr. 61 )\n		 =================\n\n> dd.1981 <- ddply(          # count spell within regime spell\n+   dd.1981,\n+   .variables = c(\"cowcode\", \"spellno\"),\n+   transform,                   .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- ddply(          # count spell within regime spell’‘  dd.1981,’‘  .variables = c(\"cowcode\", \"spellno\"),’‘  transform,                    # no clue why, but necessary’‘  neg.spell = cumsum(neg2pos.tag)’‘))’\n\n>>>> eval(expression_nr. 62 )\n		 =================\n\n> dd.1981 <- ddply(   # count consecutive obs within pos.spell\n+   dd.1981,\n+   .variables = c(\"cowcode\", \"spellno\", \"neg.spell\"),\n+   transform,      .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- ddply(   # count consecutive obs within pos.spell’‘  dd.1981,’‘  .variables = c(\"cowcode\", \"spellno\", \"neg.spell\"),’‘  transform,                    # no clue why, but necessary’‘  neg.run = cumsum(neg.dum)’‘))’\n\n>>>> eval(expression_nr. 63 )\n		 =================\n\n> summary(dd.1981[, c(\"pos.spell\", \"pos.run\", \"neg.spell\", \n+   \"neg.run\")])\ncurr.fun: symbol summary\n   pos.spell        pos.run         neg.spell        neg.run       \n Min.   :0.000   Min.   : 0.000   Min.   :0.000   Min.   : 0.0000  \n 1st Qu.:0.000   1st Qu.: 0.000   1st Qu.:0.000   1st Qu.: 0.0000  \n Median :1.000   Median : 1.000   Median :1.000   Median : 0.0000  \n Mean   :1.471   Mean   : 2.319   Mean   :1.626   Mean   : 0.6584  \n 3rd Qu.:2.000   3rd Qu.: 3.000   3rd Qu.:2.000   3rd Qu.: 1.0000  \n Max.   :8.000   Max.   :28.000   Max.   :7.000   Max.   :13.0000  \n .. after ‘expression(summary(dd.1981[, c(\"pos.spell\", \"pos.run\", \"neg.spell\", ’‘  \"neg.run\")]))’\n\n>>>> eval(expression_nr. 64 )\n		 =================\n\n> detach(package:plyr)\ncurr.fun: symbol detach\n .. after ‘expression(detach(package:plyr))’\n\n>>>> eval(expression_nr. 65 )\n		 =================\n\n> exclude <- names(dd.1981) %in% c(\n+   \"pos.dum.l1\", \"pos.dum\", \"pos.spell\", \"pos2neg.tag\",\n+   \"neg.dum\", \"neg.dum.l1\", \"neg.spell\", \"neg2pos.tag\"\n+ .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(exclude <- names(dd.1981) %in% c(’‘  \"pos.dum.l1\", \"pos.dum\", \"pos.spell\", \"pos2neg.tag\",’‘  \"neg.dum\", \"neg.dum.l1\", \"neg.spell\", \"neg2pos.tag\"’‘))’\n\n>>>> eval(expression_nr. 66 )\n		 =================\n\n> dd.1981 <- dd.1981[!exclude]\ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- dd.1981[!exclude])’\n\n>>>> eval(expression_nr. 67 )\n		 =================\n\n> rm(exclude)\ncurr.fun: symbol rm\n .. after ‘expression(rm(exclude))’\n\n>>>> eval(expression_nr. 68 )\n		 =================\n\n> summary(dd.1981[, c(\"pos.run\", \"neg.run\")])\ncurr.fun: symbol summary\n    pos.run          neg.run       \n Min.   : 0.000   Min.   : 0.0000  \n 1st Qu.: 0.000   1st Qu.: 0.0000  \n Median : 1.000   Median : 0.0000  \n Mean   : 2.319   Mean   : 0.6584  \n 3rd Qu.: 3.000   3rd Qu.: 1.0000  \n Max.   :28.000   Max.   :13.0000  \n .. after ‘expression(summary(dd.1981[, c(\"pos.run\", \"neg.run\")]))’\n\n>>>> eval(expression_nr. 69 )\n		 =================\n\n> boxplot(dd.1981[, c(\"pos.run\", \"neg.run\")])\ncurr.fun: symbol boxplot\n .. after ‘expression(boxplot(dd.1981[, c(\"pos.run\", \"neg.run\")]))’\n\n>>>> eval(expression_nr. 70 )\n		 =================\n\n> dd.1981 <- dd.1981[with(dd.1981, order(cowcode, year)),]\ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- dd.1981[with(dd.1981, order(cowcode, year)),])’\n\n>>>> eval(expression_nr. 71 )\n		 =================\n\n> # View(dd.1981[, c(\"ctryname\", \"year\", \"pwt7.grrgdpl.cor\",\n> #  \"pos.run\", \"neg.run\")])\n> # pos.run and neg.run give the number of consecutive years .... [TRUNCATED] \ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- within(dd.1981, {’‘  pwt7.grgdpch.wght <- ifelse(’‘    pwt7.grgdpch < 0, pwt7.grgdpch*neg.run,’‘        ifelse(’‘          pwt7.grgdpch > 0, pwt7.grgdpch*pos.run, ’‘            pwt7.grgdpch’‘        )’‘    )’‘  }’‘))’\n\n>>>> eval(expression_nr. 72 )\n		 =================\n\n> summary(dd.1981$pwt7.grgdpch.wght)\ncurr.fun: symbol summary\n    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's \n-150.500   -2.687    3.425    9.662   13.690  283.400      150 \n .. after ‘expression(summary(dd.1981$pwt7.grgdpch.wght))’\n\n>>>> eval(expression_nr. 73 )\n		 =================\n\n> library(Hmisc)                         # lag weighted growth\n\nAttaching package: ‘Hmisc’\n\nThe following objects are masked from ‘package:base’:\n\n    format.pval, round.POSIXt, trunc.POSIXt, units\n\ncurr.fun: symbol library\n .. after ‘expression(library(Hmisc))’\n\n>>>> eval(expression_nr. 74 )\n		 =================\n\n> dd.1981 <- paneldata.lags(\n+   dd.1981, \"cowcode\", \"year\", \"pwt7.grgdpch.wght\", lags = 1)\ncurr.fun: symbol <-\n .. after ‘expression(dd.1981 <- paneldata.lags(’‘  dd.1981, \"cowcode\", \"year\", \"pwt7.grgdpch.wght\", lags = 1))’\n\n>>>> eval(expression_nr. 75 )\n		 =================\n\n> detach(package:Hmisc)\ncurr.fun: symbol detach\n .. after ‘expression(detach(package:Hmisc))’\n\n>>>> eval(expression_nr. 76 )\n		 =================\n\n> View(dd.1981[, \n+   c(\"ctryname\", \"year\", \"pwt7.grgdpch.wght\", \"pos.run\", \n+     \"neg.run\", \"pwt7.grgdpch\", \"pwt7.grgdpch.wght.l1\")\n+   ]\n+ )\ncurr.fun: symbol View\n .. after ‘expression(View(dd.1981[, ’‘  c(\"ctryname\", \"year\", \"pwt7.grgdpch.wght\", \"pos.run\", ’‘    \"neg.run\", \"pwt7.grgdpch\", \"pwt7.grgdpch.wght.l1\")’‘  ]’‘))’\n\n> ## End\n> \n> ",
+			"settings":
+			{
+				"buffer_size": 61240,
+				"line_ending": "Unix",
+				"name": "*REPL* [r]",
+				"scratch": true
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -167,7 +249,7 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 256.0,
+		"height": 392.0,
 		"last_filter": "repl",
 		"selected_items":
 		[
@@ -196,7 +278,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 453.0
+		"width": 431.0
 	},
 	"console":
 	{
@@ -215,6 +297,13 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/Users/dag/github/hardTimes",
+		"/Users/dag/github/hardTimes/r",
+		"/Users/dag/github/hardTimes/r/buildData",
+		"/Users/dag/github/hardTimes/r/buildModel"
+	],
 	"file_history":
 	[
 		"/Users/dag/Dropbox/data/dd/script/r/heidelberg/original/ModelDev.R",
@@ -262,7 +351,7 @@
 	],
 	"find":
 	{
-		"height": 22.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
@@ -276,6 +365,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"pwt7.grrgdpl.w",
+			"pwt7.grrgdpl.wght",
+			"pwt7.grrgdpl.wght.l1",
+			"cold",
 			"fit",
 			"error",
 			"coldwar",
@@ -343,8 +436,392 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "README.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 438,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								152,
+								152
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/MarkdownEditing/Markdown.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "r/master.R",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2462,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1923,
+								1923
+							]
+						],
+						"settings":
+						{
+							"r_box_status": false,
+							"syntax": "Packages/R-Box/syntax/R Extended.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 286.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "r/testing-ground.R",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13670,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								369,
+								369
+							]
+						],
+						"settings":
+						{
+							"r_box_status": false,
+							"syntax": "Packages/R-Box/syntax/R Extended.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 9.0,
+						"translation.y": 5642.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "r/buildModel/01_defineAdditionalVariables.R",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10032,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9405,
+								9405
+							]
+						],
+						"settings":
+						{
+							"open_with_edit": true,
+							"r_box_status": false,
+							"syntax": "Packages/R-Box/syntax/R Extended.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 39.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/Users/dag/Dropbox/data/dd/script/r/heidelberg/original/economy.R",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14842,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R-Box/syntax/R Extended.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4374.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "r/exploration/repression.R",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 6918,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R-Box/syntax/R Extended.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "r/buildData/VarDef.R",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16746,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								16746,
+								16746
+							]
+						],
+						"settings":
+						{
+							"r_box_status": false,
+							"syntax": "Packages/R-Box/syntax/R Extended.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4767.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "r/buildData/GWFmerge.R",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8250,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8250,
+								8250
+							]
+						],
+						"settings":
+						{
+							"r_box_status": false,
+							"syntax": "Packages/R-Box/syntax/R Extended.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2583.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "r/buildData/PWTmerge.R",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7837,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7837,
+								7837
+							]
+						],
+						"settings":
+						{
+							"r_box_status": false,
+							"syntax": "Packages/R-Box/syntax/R Extended.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2440.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 9,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 61240,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								61240,
+								61240
+							]
+						],
+						"settings":
+						{
+							"auto_complete": true,
+							"auto_indent": false,
+							"default_dir": "/Users/dag/github/hardTimes",
+							"detect_indentation": false,
+							"gutter": false,
+							"history_arrows": true,
+							"indent_subsequent_lines": false,
+							"line_numbers": false,
+							"repl": true,
+							"repl_external_id": "r",
+							"repl_id": "17ac8e1c5df544e8b767ee0e24ca97e5",
+							"repl_restart_args":
+							{
+								"additional_scopes":
+								[
+									"tex.latex.knitr"
+								],
+								"cmd":
+								{
+									"linux":
+									[
+										"R",
+										"--interactive",
+										"--no-readline"
+									],
+									"osx":
+									[
+										"R",
+										"--interactive",
+										"--no-readline"
+									],
+									"windows":
+									[
+										"Rterm.exe",
+										"--ess",
+										"--encoding=$win_cmd_encoding"
+									]
+								},
+								"cmd_postfix": "\n",
+								"cwd": "$file_path",
+								"encoding":
+								{
+									"linux": "utf8",
+									"osx": "utf8",
+									"windows": "$win_cmd_encoding"
+								},
+								"extend_env":
+								{
+									"linux":
+									{
+										"PATH": "{PATH}:/usr/local/bin"
+									},
+									"osx":
+									{
+										"PATH": "{PATH}:/usr/local/bin"
+									},
+									"windows":
+									{
+									}
+								},
+								"external_id": "r",
+								"soft_quit": "\nquit(save=\"no\")\n",
+								"suppress_echo":
+								{
+									"linux": true,
+									"osx": true,
+									"windows": false
+								},
+								"syntax": "Packages/R/R Console.tmLanguage",
+								"type": "subprocess"
+							},
+							"repl_sublime2": false,
+							"smart_indent": false,
+							"spell_check": false,
+							"syntax": "Packages/R/R Console.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 23777.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -365,11 +842,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.462843100032,
 			1.0
 		],
 		"rows":
